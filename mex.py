@@ -1,3 +1,4 @@
+#this is w
 from tkinter import *
 from math import *
 root=Tk()
