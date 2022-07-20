@@ -38,12 +38,14 @@ print(a.mean())
 root = Tk()
 
 def getx_y(event):
-	global lapx,lapy
-	lapx,lapy=event.x,event.y
+    global lapx,lapy
+    lapx,lapy=event.x,event.y
 def mov(event):
-	global lapx,lapy
-	can.create_line((lapx,lapy,event.x,event.y),fill='white',width=6)
-	lapx,lapy=event.x,event.y
+    global lapx,lapy
+    can.create_line((lapx,lapy,event.x,event.y),fill='white',width=6)
+    lapx,lapy=event.x,event.y
+def clear():
+    can.delete('all')
 def B():
     global x_train,y_train,shuffle_index,y_train_2,clf,some_digit
     print(type(can))
@@ -60,9 +62,9 @@ def B():
     #shuffle_index=np.random.permutation(60000)
     #x_train,y_trian=x_train[shuffle_index],y_train[shuffle_index]
 
-    a=cross_val_score(clf,img,some_digit,cv=3,scoring="accuracy")
+    #a=cross_val_score(clf,img,some_digit,cv=3,scoring="accuracy")
 
-    print("new",a.mean())
+    #print("new",a.mean())
     
 root.geometry("400x450+200+150")
 
@@ -73,6 +75,8 @@ can.bind("<Button-1>",getx_y)
 can.bind("<B1-Motion>",mov)
 
 B=Button(root,text="enter",command=B)
+B_clear=Button(root,text="clear",command=clear)
+B_clear.pack()
 B.pack()
 
 root.mainloop()
