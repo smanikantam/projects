@@ -59,9 +59,6 @@ def B():
     #print(clf.fit(img,y_train_2))
     img=img.flatten()
     print(clf.predict([img]))
-    #shuffle_index=np.random.permutation(60000)
-    #x_train,y_trian=x_train[shuffle_index],y_train[shuffle_index]
-
     #a=cross_val_score(clf,img,some_digit,cv=3,scoring="accuracy")
 
     #print("new",a.mean())
