@@ -4,10 +4,10 @@ struct node{
 	int value;
 	struct node *lf,*ld,*lb;
 }*head=NULL,*current=NULL,*headf=NULL;
-int count=0,rem,lim=2,matlim,sum_bit;
+int count=0,rem,lim=2,matlim;
 void insert(int a);
 void display();
-struct node *reshape(struct node*);
+struct node *reshape();
 int main(){
 	int ch,x;
 	printf("choose\n");
@@ -27,6 +27,12 @@ int main(){
 }
 void insert(int a){
 	struct node *newnode;
+	matlim=lim*lim;
+	if(count>=matlim){
+		lim++;
+		current=reshape();
+	}
+	rem=count%lim;
 	newnode=(struct node *) malloc(sizeof(struct node));
 	newnode->value=a;
 	if(head==NULL){
@@ -34,92 +40,44 @@ void insert(int a){
 		head=newnode;
 		current=newnode;
 	}
-	else if(count<2){
-		current->lf=newnode;
-		current=newnode;
-	}
 	else{
-		sum_bit=count&(count-1);
-		matlim=lim*lim;
-		if(count>=matlim && sum_bit==0){
-			lim+=1;
-			matlim=lim*lim;
-			// rem=count%lim;
-			current=reshape(newnode);
+		if(count<lim){
+			current->lf=newnode;
+			current=newnode;
 		}
-		else{
-			int temp_rem;
-			struct node *temp_head;
-			temp_head=head;
-			rem=count%lim;
-			if((count/lim)>=2 && rem==0){
+		else if(rem==0){
+			if((count/lim)>=2){
 				head=head->lb;
-				temp_head=head;
 			}
-			else if(rem>0){
-				for(temp_rem=rem-1;temp_rem!=0;temp_rem--){
-					temp_head=temp_head->lf;
-				}
-				if(rem==1 && count>lim){
-					current->lf=newnode;
-					head->ld=newnode;
-					head->lf->lb=newnode;
-					current=newnode;
-				}
-				else{
-					current->lf=newnode;
-					temp_head->ld=newnode;
-					temp_head->lf->lb=newnode;
-					current=newnode;
-				}
-			}
+			current->lf=newnode;
+			head->lb=newnode;
+			current=newnode;
 		}
-	}
-	count++;
-}
-struct node *reshape(struct node *newnode){
-	struct node *temp_head=headf,*temp_headf=headf,*temp_current=headf,*pointer=headf;
-	int temp_count=1,temp_rem;
-	while(temp_current->lf!=NULL){
-		temp_rem=temp_count%lim;
-		if(temp_count<lim){
-			temp_current=pointer;
+		else if(rem==1){
+			current->lf=newnode;
+			head->ld=newnode;
+			head->lf->lb=newnode;
+			current=newnode;
 		}
-		else if(temp_rem==0){
-			if((temp_count/lim)>=2){
-				temp_head=temp_head->lb;
-			}
-			temp_head->lb=pointer;
-			temp_current->lf=pointer;
+		else if(rem==lim-1){
+			current->lf=newnode;
+			head->lf->ld=newnode;
+ 			current=newnode;
 		}
 		else{
-			for(temp_rem=rem-1;temp_rem!=0;temp_rem--){
-				temp_head=temp_head->lf;
+			struct node *t_head;
+			int t_rem;
+			t_head=head;
+			for(t_rem=rem-1;t_rem!=0;t_rem--){
+				t_head=t_head->lf;
 			}
-			if(temp_rem==1 && temp_count>lim){
-				temp_current->lf=pointer;
-				temp_head->ld=pointer;
-				temp_head->lf->lb=pointer;
-			}
-			else if(rem==lim-1){
-				temp_current->lf=pointer;
-				temp_head->lf->ld=pointer;
-			}
-			else{
-				temp_current->lf=pointer;
-				temp_head->ld=pointer;
-				temp_head->lf->lb=pointer;
-			}
+			current->lf=newnode;
+			head->lf->ld=newnode;
+			current=newnode;
 		}
-		pointer=pointer->lf;
-		temp_current=pointer;
-		temp_count++;
 	}
-	temp_current->lf=newnode;
-	temp_current=newnode;
-	return temp_current;
+	count+=1;
 }
-
 void display(){
 	int ch;
 	printf("1.display\t2.diagonal_display\n");
@@ -141,6 +99,54 @@ void display(){
 				break;
 	}
 }
+struct node *reshape(){
+	struct node *t_head=headf,*t_current=headf,*pointer=headf->lf;
+	int t_count=0,t_rem,i;
+	t_rem=t_count%lim;
+	for(i=count;i!=0;i--){
+		if(t_count<lim){
+			t_current->lf=pointer;
+			t_current=pointer;
+		}
+		else if(t_rem==0){
+			if((t_count/lim)>=2){
+				t_head=t_head->lb;
+			}
+			t_current->lf=pointer;
+			t_head->lb=pointer;
+			t_current=pointer;
+		}
+		else if(t_rem==1){
+			t_current->lf=pointer;
+			t_head->ld=pointer;
+			t_head->lf->lb=pointer;
+			t_current=pointer;
+		}
+		else if(t_rem==lim-1){
+			t_current->lf=pointer;
+			t_head->lf->ld=pointer;
+ 			t_current=pointer;
+		}
+		else{
+			struct node *temp_head;
+			int temp_rem;
+			temp_head=head;
+			for(temp_rem=rem-1;temp_rem!=0;temp_rem--){
+				temp_head=temp_head->lf;
+			}
+			t_current->lf=pointer;
+			t_head->lf->ld=pointer;
+			t_current=pointer;
+		}
+		if(i!=1){
+		pointer=pointer->lf;
+		}	
+		t_count++;
+	}
+	head=t_head;
+	return t_current;
+}
+
 
 
 
