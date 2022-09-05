@@ -27,14 +27,15 @@ int main(){
 }
 void insert(int a){
 	struct node *newnode;
-	matlim=lim*lim;
-	if(count>=matlim){
-		lim++;
-		current=reshape();
-	}
-	rem=count%lim;
 	newnode=(struct node *) malloc(sizeof(struct node));
 	newnode->value=a;
+	matlim=lim*lim;
+	if(count+1>matlim){
+		lim++;
+		current=reshape();
+		// printf("%d%d%d\n",head->lf->value,head->ld->value,head->lb->value);
+	}
+	rem=count%lim;
 	if(head==NULL){
 		headf=newnode;
 		head=newnode;
@@ -59,11 +60,11 @@ void insert(int a){
 			head->lf->lb=newnode;
 			current=newnode;
 		}
-		else if(rem==lim-1){
-			current->lf=newnode;
-			head->lf->ld=newnode;
- 			current=newnode;
-		}
+		// else if(rem==lim-1){
+		// 	current->lf=newnode;
+		// 	head->lf->ld=newnode;
+ 	// 		current=newnode;
+		// }
 		else{
 			struct node *t_head;
 			int t_rem;
@@ -122,11 +123,11 @@ struct node *reshape(){
 			t_head->lf->lb=pointer;
 			t_current=pointer;
 		}
-		else if(t_rem==lim-1){
-			t_current->lf=pointer;
-			t_head->lf->ld=pointer;
- 			t_current=pointer;
-		}
+		// else if(t_rem==lim-1){
+		// 	t_current->lf=pointer;
+		// 	t_head->lf->ld=pointer;
+ 	// 		t_current=pointer;
+		// }
 		else{
 			struct node *temp_head;
 			int temp_rem;
@@ -138,7 +139,7 @@ struct node *reshape(){
 			t_head->lf->ld=pointer;
 			t_current=pointer;
 		}
-		if(i!=1){
+		if(pointer->lf!=NULL){
 		pointer=pointer->lf;
 		}	
 		t_count++;
