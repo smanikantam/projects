@@ -42,7 +42,7 @@ def getx_y(event):
     lapx,lapy=event.x,event.y
 def mov(event):
     global lapx,lapy
-    can.create_line((lapx,lapy,event.x,event.y),fill='white',width=6)
+    can.create_line((lapx,lapy,event.x,event.y),fill='black',width=6)
     lapx,lapy=event.x,event.y
 def clear():
     can.delete('all')
@@ -65,7 +65,7 @@ def B():
     
 root.geometry("400x450+200+150")
 
-can=Canvas(root,bg="black",width=400,height=400)
+can=Canvas(root,bg="white",width=400,height=400)
 can.pack()
 
 can.bind("<Button-1>",getx_y)
