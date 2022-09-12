@@ -49,7 +49,7 @@ def clear():
 def B():
     global x_train,y_train,shuffle_index,y_train_2,clf,some_digit
     print(type(can))
-    img=ImageGrab.grab(bbox=(256,226,760,730))
+    img=ImageGrab.grab(bbox=(199,175,601,559))
     img.save("px.png","png")
     img=img.resize((28,28))
     img=img.convert("L")
