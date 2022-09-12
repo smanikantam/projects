@@ -3,9 +3,9 @@
 struct node{
 	int value;
 	struct node *lf,*ld,*lb;
-}*head=NULL,*current=NULL,*headf=NULL;
+}*current_head=NULL,*current=NULL,*headf=NULL;
 int count=0,rem,lim=2,matlim;
-void insert(int a);
+int insert(int a);
 void display();
 struct node *reshape();
 int main(){
@@ -25,157 +25,148 @@ int main(){
 	}
 	return 1;
 }
-void insert(int a){
-	struct node *newnode;
-	newnode=(struct node *) malloc(sizeof(struct node));
-	newnode->value=a;
-	matlim=lim*lim;
-	if(count+1>matlim){
-		lim++;
-		current=reshape();
-		// printf("%d%d%d\n",head->lf->value,head->ld->value,head->lb->value);
-	}
-	rem=count%lim;
-	if(head==NULL){
-		headf=newnode;
-		head=newnode;
-		current=newnode;
-	}
-	else{
-		if(count<lim){
-			current->lf=newnode;
-			current=newnode;
-		}
-		else if(rem==0){
-			if((count/lim)>=2){
-				head=head->lb;
-			}
-			current->lf=newnode;
-			head->lb=newnode;
-			current=newnode;
-		}
-		else if(rem==1){
-			current->lf=newnode;
-			head->ld=newnode;
-			head->lf->lb=newnode;
-			current=newnode;
-		}
-		// else if(rem==lim-1){
-		// 	current->lf=newnode;
-		// 	head->lf->ld=newnode;
- 	// 		current=newnode;
-		// }
-		else{
-			struct node *t_head;
-			int t_rem;
-			t_head=head;
-			for(t_rem=rem-1;t_rem!=0;t_rem--){
-				t_head=t_head->lf;
-			}
-			current->lf=newnode;
-			head->lf->ld=newnode;
-			current=newnode;
-		}
-	}
-	count+=1;
-}
 void display(){
 	int ch;
-	printf("1.display\t2.diagonal_display\n");
+	printf("1.display\t2.diagonal_display\t3.down\n");
 	struct node *temp;
 	temp=headf;
 	scanf("%d",&ch);
 	switch(ch){
-		case 1: while(temp->lf!=NULL){
-					printf("%d",temp->value);
+		case 1:	printf("%d",temp->value);
+				while(temp->lf!=NULL){
 					temp=temp->lf;
+					printf(" %d",temp->value);
 				}
-				printf("%d\n",temp->value);
 				break;
-		case 2: while(temp->ld!=NULL){
-					printf("%d",temp->value);
+		case 2:	printf("%d",temp->value);
+				while(temp->ld!=NULL){
 					temp=temp->ld;
+					printf(" %d",temp->value);
 				}
-				printf("%d\n",temp->value);
+				break;
+		case 3:	printf("%d",temp->value);
+				while(temp->lb!=NULL){
+					temp=temp->lb;
+					printf(" %d",temp->value);
+				}
 				break;
 	}
+	printf("\n");
+}
+int insert(int a){
+	struct node *newnode;
+	newnode=(struct node *) malloc(sizeof(struct node));
+	newnode->value=a;
+	newnode->lf=NULL;
+	newnode->ld=NULL;
+	newnode->lb=NULL;
+	matlim=lim*lim;
+	if(count+1>matlim){
+		printf("reshape str\n");
+		reshape();
+		printf("com\n");
+	}
+	printf("lim %d\n",lim);
+	rem=count%lim;
+	printf("count %d\n",count);
+	printf("rem %d\n",rem);
+	if(headf==NULL){
+		printf("str headf\n");
+		current_head=newnode;
+		headf=newnode;
+		current=newnode;
+		count++;
+		printf("com\n");
+		return 1;
+	}
+	else{
+		if(count<lim){
+			printf("str count<lim\n");
+			current->lf=newnode;
+			current=newnode;
+			printf("com\n");
+		}
+		else if(rem==0){
+			if(count/lim>=2){
+				printf("str count/lim>=2\n");
+				printf("before head%d\n",current_head->value);
+				current_head=current_head->lb;
+				printf("after head %d\n",current_head->value);
+				printf("com\n");
+			}
+			printf("str else count/lim>=2\n");
+			current->lf=newnode;
+			current_head->lb=newnode;
+			current=newnode;
+			printf("com\n");
+			
+		}
+		else if(rem==1){
+			printf("str rem==1\n");
+			current->lf=newnode;
+			current_head->ld=newnode;
+			current_head->lf->lb=newnode;
+			current=newnode;
+			printf("com\n");
+		}
+		else if(rem==lim-2){
+			printf("str rem==lim-2\n");
+			struct node *temp;
+			int i;
+			temp=current_head;
+			for(i=lim-3;i!=0;i--)
+				temp=temp->lf;
+			temp->lf->lf->ld=newnode;
+			temp->lf->lb=newnode;
+			temp->ld=newnode;
+			current->lf=newnode;
+			current=newnode;
+			printf("com\n");
+		}
+		else if(rem==lim-1){
+			printf("str rem==lim-1\n");
+			struct node *temp;int i;
+			temp=current_head;
+			for(i=lim-2;i!=0;i--)
+				temp=temp->lf;
+			temp->ld=newnode;
+			temp->lf->lb=newnode;
+			current->lf=newnode;
+			current=newnode;
+			printf("com\n");
+		}
+
+		else{
+			printf("str else\n");
+			struct node *temp;int i;
+			temp=current_head;
+			for(i=rem-1;i!=0;i--)
+				temp=temp->lf;
+			temp->ld=newnode;
+			temp->lf->lb=newnode;
+			current->lf=newnode;
+			current=newnode;
+			printf("com\n");
+		}
+	}
+	count++;
+	return 1;
 }
 struct node *reshape(){
-	struct node *t_head=headf,*t_current=headf,*pointer=headf->lf;
-	int t_count=0,t_rem,i;
-	t_rem=t_count%lim;
-	for(i=count;i!=0;i--){
-		if(t_count<lim){
-			t_current->lf=pointer;
-			t_current=pointer;
-		}
-		else if(t_rem==0){
-			if((t_count/lim)>=2){
-				t_head=t_head->lb;
-			}
-			t_current->lf=pointer;
-			t_head->lb=pointer;
-			t_current=pointer;
-		}
-		else if(t_rem==1){
-			t_current->lf=pointer;
-			t_head->ld=pointer;
-			t_head->lf->lb=pointer;
-			t_current=pointer;
-		}
-		// else if(t_rem==lim-1){
-		// 	t_current->lf=pointer;
-		// 	t_head->lf->ld=pointer;
- 	// 		t_current=pointer;
-		// }
-		else{
-			struct node *temp_head;
-			int temp_rem;
-			temp_head=head;
-			for(temp_rem=rem-1;temp_rem!=0;temp_rem--){
-				temp_head=temp_head->lf;
-			}
-			t_current->lf=pointer;
-			t_head->lf->ld=pointer;
-			t_current=pointer;
-		}
-		if(pointer->lf!=NULL){
-		pointer=pointer->lf;
-		}	
-		t_count++;
+	struct node *temp;
+	temp=headf;
+	headf=NULL;
+	count=0;
+	lim++;
+	while(temp->lf!=NULL){
+		printf("value %d\n",temp->value);
+		insert(temp->value);
+		temp=temp->lf;
 	}
-	head=t_head;
-	return t_current;
+	printf("value %d\n",temp->value);
+	insert(temp->value);
+	return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
